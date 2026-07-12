@@ -13,7 +13,7 @@
 const MAP_CONFIG = {
   tileWidth: 1080,
   tileHeight: 1080,
-  overlap: 500,
+  overlap: 250,
   rows: 3,
   cols: 3,
 
