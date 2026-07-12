@@ -38,5 +38,12 @@ const MAP_CONFIG = {
     { row: 2, col: 3, src: "photos/2_3.jpg" },
     { row: 2, col: 4, src: "photos/2_4.jpg" },
     { row: 2, col: 5, src: "photos/2_5.jpg" },
+
+    { row: 3, col: 0, src: "photos/3_0.jpg" },
+    { row: 3, col: 1, src: "photos/3_1.jpg" },
+    { row: 3, col: 2, src: "photos/3_2.jpg" },
+    { row: 3, col: 3, src: "photos/3_3.jpg" },
+    { row: 3, col: 4, src: "photos/3_4.jpg" },
+    { row: 3, col: 5, src: "photos/3_5.jpg" },
   ],
 };
