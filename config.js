@@ -13,7 +13,7 @@
 const MAP_CONFIG = {
   tileWidth: 1080,
   tileHeight: 1080,
-  overlap: 250,
+  overlap: 100,
   rows: 3,
   cols: 3,
 
@@ -21,13 +21,22 @@ const MAP_CONFIG = {
     { row: 0, col: 0, src: "photos/0_0.jpg" },
     { row: 0, col: 1, src: "photos/0_1.jpg" },
     { row: 0, col: 2, src: "photos/0_2.jpg" },
+    { row: 0, col: 3, src: "photos/0_3.jpg" },
+    { row: 0, col: 4, src: "photos/0_4.jpg" },
+    { row: 0, col: 5, src: "photos/0_5.jpg" },
 
     { row: 1, col: 0, src: "photos/1_0.jpg" },
     { row: 1, col: 1, src: "photos/1_1.jpg" },
     { row: 1, col: 2, src: "photos/1_2.jpg" },
+    { row: 1, col: 3, src: "photos/1_3.jpg" },
+    { row: 1, col: 4, src: "photos/1_4.jpg" },
+    { row: 1, col: 5, src: "photos/1_5.jpg" },
 
     { row: 2, col: 0, src: "photos/2_0.jpg" },
     { row: 2, col: 1, src: "photos/2_1.jpg" },
     { row: 2, col: 2, src: "photos/2_2.jpg" },
+    { row: 2, col: 3, src: "photos/2_3.jpg" },
+    { row: 2, col: 4, src: "photos/2_4.jpg" },
+    { row: 2, col: 5, src: "photos/2_5.jpg" },
   ],
 };
