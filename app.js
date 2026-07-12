@@ -4,35 +4,66 @@
   const viewport = document.getElementById("viewport");
   const zoomLabel = document.getElementById("zoomLabel");
 
-  const { tileWidth, tileHeight, overlap, rows, cols, tiles, edgeFade, fadeWidth } = MAP_CONFIG;
-  const fw = fadeWidth || overlap;
+  const { tileWidth, tileHeight, tiles, edgeFade, fadeWidth } = MAP_CONFIG;
 
-  const stepX = tileWidth - overlap;
-  const stepY = tileHeight - overlap;
-  const mapWidth = stepX * (cols - 1) + tileWidth;
-  const mapHeight = stepY * (rows - 1) + tileHeight;
+  // Індекс по row/col для пошуку сусідів
+  const byRC = {};
+  tiles.forEach((t) => (byRC[t.row + "_" + t.col] = t));
+  const neighbor = (t, dr, dc) => byRC[(t.row + dr) + "_" + (t.col + dc)];
+
+  // Межі всієї мапи за реальними координатами тайлів
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  tiles.forEach((t) => {
+    minX = Math.min(minX, t.x);
+    minY = Math.min(minY, t.y);
+    maxX = Math.max(maxX, t.x + tileWidth);
+    maxY = Math.max(maxY, t.y + tileHeight);
+  });
+  const mapWidth = maxX - minX;
+  const mapHeight = maxY - minY;
 
   grid.style.width = mapWidth + "px";
   grid.style.height = mapHeight + "px";
 
-  // Будуємо тайли. z-index зростає зліва направо, зверху вниз,
-  // тож кожне наступне фото трохи перекриває шов попереднього.
+  // Наскільки два тайли фактично перекриваються по заданому боку (px)
+  function overlapAmount(t, dir) {
+    if (dir === "right") {
+      const o = neighbor(t, 0, 1);
+      return o ? Math.max(0, t.x + tileWidth - o.x) : 0;
+    }
+    if (dir === "left") {
+      const o = neighbor(t, 0, -1);
+      return o ? Math.max(0, o.x + tileWidth - t.x) : 0;
+    }
+    if (dir === "bottom") {
+      const o = neighbor(t, 1, 0);
+      return o ? Math.max(0, t.y + tileHeight - o.y) : 0;
+    }
+    if (dir === "top") {
+      const o = neighbor(t, -1, 0);
+      return o ? Math.max(0, o.y + tileHeight - t.y) : 0;
+    }
+    return 0;
+  }
+
   tiles.forEach((t) => {
     const el = document.createElement("div");
     el.className = "tile";
-    el.style.left = t.col * stepX + "px";
-    el.style.top = t.row * stepY + "px";
+    el.style.left = t.x - minX + "px";
+    el.style.top = t.y - minY + "px";
     el.style.width = tileWidth + "px";
     el.style.height = tileHeight + "px";
-    el.style.zIndex = t.row * cols + t.col + 1;
+    // Пізніші (нижче/правіше) тайли малюються поверх — приховують шов знизу
+    el.style.zIndex = t.row * 1000 + t.col + 1;
 
     if (edgeFade) {
-      applyEdgeFade(el, {
-        left: t.col > 0,
-        right: t.col < cols - 1,
-        top: t.row > 0,
-        bottom: t.row < rows - 1,
-      });
+      const sides = {
+        left: overlapAmount(t, "left"),
+        right: overlapAmount(t, "right"),
+        top: overlapAmount(t, "top"),
+        bottom: overlapAmount(t, "bottom"),
+      };
+      applyEdgeFade(el, sides);
     }
 
     if (t.src) {
@@ -51,14 +82,16 @@
     grid.appendChild(el);
   });
 
-  // Робить краї тайлу, де є сусід, плавно прозорими на ширину fw px,
-  // щоб фото м'яко перетікали одне в одне (crossfade) замість жорсткого шва.
+  // Робить краї тайлу, де є сусід, плавно прозорими на ширину фактичного
+  // накладення (або обмежену fadeWidth), щоб фото м'яко перетікали одне в
+  // одне (crossfade) замість жорсткого шва.
   function applyEdgeFade(el, sides) {
+    const w = (px) => (fadeWidth ? Math.min(px, fadeWidth) : px);
     const masks = [];
-    if (sides.left) masks.push(`linear-gradient(to right, transparent 0, #000 ${fw}px)`);
-    if (sides.right) masks.push(`linear-gradient(to left, transparent 0, #000 ${fw}px)`);
-    if (sides.top) masks.push(`linear-gradient(to bottom, transparent 0, #000 ${fw}px)`);
-    if (sides.bottom) masks.push(`linear-gradient(to top, transparent 0, #000 ${fw}px)`);
+    if (sides.left > 0) masks.push(`linear-gradient(to right, transparent 0, #000 ${w(sides.left)}px)`);
+    if (sides.right > 0) masks.push(`linear-gradient(to left, transparent 0, #000 ${w(sides.right)}px)`);
+    if (sides.top > 0) masks.push(`linear-gradient(to bottom, transparent 0, #000 ${w(sides.top)}px)`);
+    if (sides.bottom > 0) masks.push(`linear-gradient(to top, transparent 0, #000 ${w(sides.bottom)}px)`);
     if (!masks.length) return;
 
     const maskValue = masks.join(", ");
@@ -79,7 +112,7 @@
     const p = document.createElement("div");
     p.className = "placeholder";
     p.textContent = `${t.row}_${t.col}`;
-    p.style.background = `hsl(${(t.row * cols + t.col) * 47 % 360}, 35%, 22%)`;
+    p.style.background = `hsl(${((t.row * 7 + t.col) * 47) % 360}, 35%, 22%)`;
     return p;
   }
 
@@ -105,7 +138,6 @@
     applyTransform();
   }
 
-  // Зум відносно позиції курсора (як у Google Maps)
   function zoomAt(clientX, clientY, factor) {
     const rect = viewport.getBoundingClientRect();
     const x = clientX - rect.left;
@@ -130,7 +162,6 @@
     { passive: false }
   );
 
-  // Перетягування мишею
   let dragging = false;
   let lastX = 0;
   let lastY = 0;
@@ -156,7 +187,6 @@
     viewport.classList.remove("dragging");
   });
 
-  // Тач (мобільні): панорамування одним пальцем, зум щипком
   let touchState = null;
 
   viewport.addEventListener(
@@ -205,7 +235,6 @@
     return Math.hypot(dx, dy);
   }
 
-  // Кнопки
   document.getElementById("zoomIn").addEventListener("click", () => {
     const r = viewport.getBoundingClientRect();
     zoomAt(r.left + r.width / 2, r.top + r.height / 2, 1.25);

@@ -1,46 +1,30 @@
+// ==============================================
+//  НАЛАШТУВАННЯ ФОТО-МАПИ
+// ==============================================
+// tileWidth / tileHeight — розмір одного фото (px)
+//
+// Кожне фото має ТОЧНУ позицію (x, y) в загальних координатах мапи —
+// це важливо, бо реальні фото рідко накладаються рівно й строго по сітці
+// (буває невеликий діагональний зсув). Значення x/y обчислені автоматично
+// скриптом align_photos.py (кроскореляція зображень) — не підбирайте їх на око.
+//
+// row/col — лише "логічна" адреса фото в сітці (яке з яким сусідить),
+// потрібна для визначення країв, які треба плавно робити прозорими.
+//
+// fadeWidth — необов'язкове обмеження: максимальна ширина зони згасання
+// прозорості в px. null = фейдити всю зону накладення повністю.
+
 const MAP_CONFIG = {
   tileWidth: 1080,
   tileHeight: 1080,
-  
-  overlap: 500,
 
-  edgeFade: true,
-  fadeWidth: 50,    
-  
-  rows: 4,
-  cols: 4,
+  edgeFade: true,   // true — плавна прозорість на стиках, false — жорсткий стик
+  fadeWidth: null,  // null = фейдити всю зону накладення повністю
 
   tiles: [
-    { row: 0, col: 0, src: "photos/0_0.jpg" },
-    { row: 0, col: 1, src: "photos/0_1.jpg" },
-    { row: 0, col: 2, src: "photos/0_2.jpg" },
-    { row: 0, col: 3, src: "photos/0_3.jpg" },
-    { row: 0, col: 4, src: "photos/0_4.jpg" },
-
-    { row: 1, col: 0, src: "photos/1_0.jpg" },
-    { row: 1, col: 1, src: "photos/1_1.jpg" },
-    { row: 1, col: 2, src: "photos/1_2.jpg" },
-    { row: 1, col: 3, src: "photos/1_3.jpg" },
-    { row: 1, col: 4, src: "photos/1_4.jpg" },
-
-    { row: 2, col: 0, src: "photos/2_0.jpg" },
-    { row: 2, col: 1, src: "photos/2_1.jpg" },
-    { row: 2, col: 2, src: "photos/2_2.jpg" },
-    { row: 2, col: 3, src: "photos/2_3.jpg" },
-    { row: 2, col: 4, src: "photos/2_4.jpg" },
-
-    { row: 3, col: 0, src: "photos/3_0.jpg" },
-    { row: 3, col: 1, src: "photos/3_1.jpg" },
-    { row: 3, col: 2, src: "photos/3_2.jpg" },
-    { row: 3, col: 3, src: "photos/3_3.jpg" },
-    { row: 3, col: 4, src: "photos/3_4.jpg" },
-
-    { row: 4, col: 0, src: "photos/4_0.jpg" },
-    { row: 4, col: 1, src: "photos/4_1.jpg" },
-    { row: 4, col: 2, src: "photos/4_2.jpg" },
-    { row: 4, col: 3, src: "photos/4_3.jpg" },
-    { row: 4, col: 4, src: "photos/4_4.jpg" },
-
-
+    { row: 0, col: 0, x: 0,   y: 0,   src: "photos/1_0.jpg" },
+    { row: 0, col: 1, x: 508, y: 0,   src: "photos/1_1.jpg" },
+    { row: 1, col: 0, x: 38,  y: 432, src: "photos/2_0.jpg" },
+    { row: 1, col: 1, x: 461, y: 432, src: "photos/2_1.jpg" },
   ],
 };
