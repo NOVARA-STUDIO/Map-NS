@@ -5,7 +5,7 @@ const MAP_CONFIG = {
   overlap: 540,
 
   edgeFade: true,
-  fadeWidth: 50,    
+  fadeWidth: 100,    
   
   rows: 4,
   cols: 4,
