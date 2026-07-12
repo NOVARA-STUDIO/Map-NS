@@ -11,7 +11,7 @@
 //         щоб було видно структуру мапи.
 
 const MAP_CONFIG = {
-  tileWidth: 1920,
+  tileWidth: 1080,
   tileHeight: 1080,
   overlap: 40,
   rows: 3,
