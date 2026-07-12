@@ -4,7 +4,8 @@
   const viewport = document.getElementById("viewport");
   const zoomLabel = document.getElementById("zoomLabel");
 
-  const { tileWidth, tileHeight, overlap, rows, cols, tiles } = MAP_CONFIG;
+  const { tileWidth, tileHeight, overlap, rows, cols, tiles, edgeFade, fadeWidth } = MAP_CONFIG;
+  const fw = fadeWidth || overlap;
 
   const stepX = tileWidth - overlap;
   const stepY = tileHeight - overlap;
@@ -25,6 +26,15 @@
     el.style.height = tileHeight + "px";
     el.style.zIndex = t.row * cols + t.col + 1;
 
+    if (edgeFade) {
+      applyEdgeFade(el, {
+        left: t.col > 0,
+        right: t.col < cols - 1,
+        top: t.row > 0,
+        bottom: t.row < rows - 1,
+      });
+    }
+
     if (t.src) {
       const img = document.createElement("img");
       img.src = t.src;
@@ -40,6 +50,30 @@
 
     grid.appendChild(el);
   });
+
+  // Робить краї тайлу, де є сусід, плавно прозорими на ширину fw px,
+  // щоб фото м'яко перетікали одне в одне (crossfade) замість жорсткого шва.
+  function applyEdgeFade(el, sides) {
+    const masks = [];
+    if (sides.left) masks.push(`linear-gradient(to right, transparent 0, #000 ${fw}px)`);
+    if (sides.right) masks.push(`linear-gradient(to left, transparent 0, #000 ${fw}px)`);
+    if (sides.top) masks.push(`linear-gradient(to bottom, transparent 0, #000 ${fw}px)`);
+    if (sides.bottom) masks.push(`linear-gradient(to top, transparent 0, #000 ${fw}px)`);
+    if (!masks.length) return;
+
+    const maskValue = masks.join(", ");
+    const composite = masks.map(() => "intersect").join(", ");
+    const webkitComposite = masks.slice(1).map(() => "source-in").join(", ") || "source-over";
+
+    el.style.maskImage = maskValue;
+    el.style.webkitMaskImage = maskValue;
+    el.style.maskComposite = composite;
+    el.style.webkitMaskComposite = webkitComposite;
+    el.style.maskRepeat = "no-repeat";
+    el.style.webkitMaskRepeat = "no-repeat";
+    el.style.maskSize = "100% 100%";
+    el.style.webkitMaskSize = "100% 100%";
+  }
 
   function placeholder(t) {
     const p = document.createElement("div");
