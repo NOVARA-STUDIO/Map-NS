@@ -2,10 +2,10 @@ const MAP_CONFIG = {
   tileWidth: 1080,
   tileHeight: 1080,
   
-  overlap: 400,
+  overlap: 500,
 
   edgeFade: true,
-  fadeWidth: 100,    
+  fadeWidth: 50,    
   
   rows: 5,
   cols: 5,
