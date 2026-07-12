@@ -2,8 +2,8 @@ const MAP_CONFIG = {
   tileWidth: 1080,
   tileHeight: 1080,
   overlap: 80,
-  rows: 3,
-  cols: 3,
+  rows: 5,
+  cols: 5,
 
   tiles: [
     { row: 0, col: 0, src: "photos/0_0.jpg" },
