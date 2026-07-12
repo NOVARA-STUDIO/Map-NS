@@ -1,6 +1,3 @@
-// Автоматично згенеровано align_photos.py (ORB + RANSAC feature matching) —
-// координати обчислені з реального збігу деталей на фото (дороги, будівлі),
-// не підбирайте x/y вручну.
 const MAP_CONFIG = {
   tileWidth: 1920,
   tileHeight: 1080,
