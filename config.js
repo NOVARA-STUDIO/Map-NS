@@ -1,19 +1,7 @@
-// ==============================================
-//  НАЛАШТУВАННЯ ФОТО-МАПИ
-// ==============================================
-// tileWidth / tileHeight — розмір одного фото (px), у вашому випадку 1920×1080
-// overlap  — на скільки пікселів сусідні фото "заходять" одне на одне,
-//            щоб приховати шви на краях (підберіть під ваші фото, напр. 20–80)
-// rows / cols — розмір сітки мапи
-// tiles — список фото. row/col — позиція у сітці (0,0 — лівий верхній кут).
-//         src — шлях до файлу в папці photos/. Якщо файл ще не додали —
-//         залиште src порожнім і на цьому місці буде плейсхолдер з номером,
-//         щоб було видно структуру мапи.
-
 const MAP_CONFIG = {
   tileWidth: 1080,
   tileHeight: 1080,
-  overlap: 90,
+  overlap: 80,
   rows: 3,
   cols: 3,
 
@@ -45,5 +33,19 @@ const MAP_CONFIG = {
     { row: 3, col: 3, src: "photos/3_3.jpg" },
     { row: 3, col: 4, src: "photos/3_4.jpg" },
     { row: 3, col: 5, src: "photos/3_5.jpg" },
+
+    { row: 4, col: 0, src: "photos/4_0.jpg" },
+    { row: 4, col: 1, src: "photos/4_1.jpg" },
+    { row: 4, col: 2, src: "photos/4_2.jpg" },
+    { row: 4, col: 3, src: "photos/4_3.jpg" },
+    { row: 4, col: 4, src: "photos/4_4.jpg" },
+    { row: 4, col: 5, src: "photos/4_5.jpg" },
+
+    { row: 5, col: 0, src: "photos/5_0.jpg" },
+    { row: 5, col: 1, src: "photos/5_1.jpg" },
+    { row: 5, col: 2, src: "photos/5_2.jpg" },
+    { row: 5, col: 3, src: "photos/5_3.jpg" },
+    { row: 5, col: 4, src: "photos/5_4.jpg" },
+    { row: 5, col: 5, src: "photos/5_5.jpg" },
   ],
 };
